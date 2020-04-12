@@ -7,4 +7,4 @@ See:
 * [Menger sponge - Wikipedia](https://en.wikipedia.org/wiki/Menger_sponge)
 * [A-Frame](https://aframe.io)
 
-![screenshot](megner-vr-screenshot.png)
+![screenshot](menger-vr-screenshot.png)
