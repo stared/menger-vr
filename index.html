@@ -31,8 +31,7 @@
       const step2 = nextStep(step1)
       const step3 = nextStep(step2)
 
-
-      const c = 2;
+      const c = 3;
       const shift = {
         x: 0,
         y: 1,
@@ -42,7 +41,7 @@
       const scene = d3.select('a-scene')
       scene.selectAll('a-box').data(step3)
         .enter().append('a-box')
-        .attr('color', (d) => d3.rgb(255 * (d.x + 0.5), 255 * (d.y + 0.5), 255 * (d.z + 0.5)).formatHex())
+        .attr('color', (d) => d3.rgb(255 * (d.x + 0.5), 255 * (-d.y + 0.5), 255 * (d.z + 0.5)).formatHex())
         .attr('opacity', 1)
         .attr('position', (d) => ({
           x: c * d.x + shift.x,
