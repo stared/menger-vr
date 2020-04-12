@@ -1,29 +1,66 @@
 <html>
   <head>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
     <script src="https://aframe.io/releases/1.0.4/aframe.min.js"></script>
   </head>
   <body>
     <a-scene>
-      <a-box position="0 1 1" rotation="0 0 0" color="#0000ff" opacity="0.5"></a-box>
-      <a-box position="1 0 1" rotation="0 0 0" color="#0000ff" opacity="0.5"></a-box>
-      <a-box position="1 1 0" rotation="0 0 0" color="#0000ff" opacity="0.5"></a-box>
-      <a-box position="0 -1 -1" rotation="0 0 0" color="#0000ff" opacity="0.5"></a-box>
-      <a-box position="-1 0 -1" rotation="0 0 0" color="#0000ff" opacity="0.5"></a-box>
-      <a-box position="-1 -1 0" rotation="0 0 0" color="#0000ff" opacity="0.5"></a-box>
-      <a-box position="0 -1 1" rotation="0 0 0" color="#0000ff" opacity="0.5"></a-box>
-      <a-box position="-1 0 1" rotation="0 0 0" color="#0000ff" opacity="0.5"></a-box>
-      <a-box position="-1 1 0" rotation="0 0 0" color="#0000ff" opacity="0.5"></a-box>
-      <a-box position="0 1 -1" rotation="0 0 0" color="#0000ff" opacity="0.5"></a-box>
-      <a-box position="1 0 -1" rotation="0 0 0" color="#0000ff" opacity="0.5"></a-box>
-      <a-box position="1 -1 0" rotation="0 0 0" color="#0000ff" opacity="0.5"></a-box>
-      <a-box position="1 1 1" rotation="0 0 0" color="#ff0000" opacity="0.5"></a-box>
-      <a-box position="1 1 -1" rotation="0 0 0" color="#ff0000" opacity="0.5"></a-box>
-      <a-box position="1 -1 1" rotation="0 0 0" color="#ff0000" opacity="0.5"></a-box>
-      <a-box position="1 -1 -1" rotation="0 0 0" color="#ff0000" opacity="0.5"></a-box>
-      <a-box position="-1 1 1" rotation="0 0 0" color="#ff0000" opacity="0.5"></a-box>
-      <a-box position="-1 1 -1" rotation="0 0 0" color="#ff0000" opacity="0.5"></a-box>
-      <a-box position="-1 -1 1" rotation="0 0 0" color="#ff0000" opacity="0.5"></a-box>
-      <a-box position="-1 -1 -1" rotation="0 0 0" color="#ff0000" opacity="0.5"></a-box>
+
     </a-scene>
+    <script>
+      const step0 = [{ x: 0, y: 0, z: 0, s: 1 }]
+
+      const splitCube = (cube) => {
+        const s = cube.s / 3
+        const range = [-1, 0, 1]
+        return range.flatMap((i) => range.flatMap((j) => range.map((k) => ({ i, j, k }))))
+          .filter((d) => Math.abs(d.i) + Math.abs(d.j) + Math.abs(d.k) > 1)
+          .map((d) => ({
+            x: cube.x + s * d.i,
+            y: cube.y + s * d.j,
+            z: cube.z + s * d.k,
+            s
+          }))
+      }
+
+      const nextStep = (cubes) => {
+        return cubes.flatMap((cube) => splitCube(cube))
+      }
+
+      const step1 = nextStep(step0)
+      const step2 = nextStep(step1)
+      const step3 = nextStep(step2)
+
+
+      const c = 2;
+      const shift = {
+        x: 0,
+        y: 2,
+        z: 0
+      }
+
+      const scene = d3.select('a-scene')
+      scene.selectAll('a-box').data(step3)
+        .enter().append('a-box')
+        .attr('color', (d) => d3.rgb(255 * (d.x + 0.5), 255 * (d.y + 0.5), 255 * (d.z + 0.5)).formatHex())
+        .attr('opacity', 1)
+        .attr('position', (d) => ({
+          x: c * d.x + shift.x,
+          y: c * d.y + shift.y,
+          z: c * d.z + shift.z
+        }))
+        .attr('scale', (d) => ({
+          x: c * d.s,
+          y: c * d.s,
+          z: c * d.s
+        }))
+
+      // window.setTimeout(() => {
+      //   scene.selectAll('a-box').data(step3)
+      //     .attr('opacity', 0.2)
+      // }, 5000)
+
+      
+    </script>
   </body>
 </html>
